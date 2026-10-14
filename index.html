@@ -518,7 +518,7 @@ footer .wrap{border-top:1px solid var(--rule);padding-top:22px;display:flex;just
 <script>
 /* Contact form → Google Sheet.
    Paste your Apps Script web app URL below (see README). Until then, the form falls back to opening an email. */
-const SHEET_URL = '';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwm5pOrMHw_RGaTwbbOKAmmOhvfXnmgCMmNEpD8vJzR0ixX1UilHILA8cZGueA3Bhij/exec';
 (function(){
   const f = document.getElementById('contact-form'), st = document.getElementById('f-status'), btn = f.querySelector('button');
   const say = (t, c) => { st.textContent = t; st.className = 'status ' + (c || ''); };
