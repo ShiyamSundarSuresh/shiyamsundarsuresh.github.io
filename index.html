@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#121A23">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shiyam Sundar S — Security Operations</title>
+<meta name="description" content="Shiyam Sundar S — Security Operations Analyst in Chennai. SIEM detection engineering, SOAR automation, incident response and penetration testing.">
+<meta property="og:title" content="Shiyam Sundar S — Security Operations">
+<meta property="og:description" content="Detections written with an attacker's instincts. SIEM, SOAR, incident response, offensive security.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#121A23;
+  --paper-2:#1A2430;
+  --surface:#1C2733;
+  --surface-2:#243240;
+  --ink:#E6EBF0;
+  --muted:#93A1AE;
+  --rule:#2A3643;
+  --signal:#F2622E;
+  --term-bg:#0B1117;
+  --term-fg:#D3DCE4;
+  --term-dim:#7C8A97;
+  --term-ok:#7FD1B9;
+  --term-warn:#F2A65A;
+  --sans:"Archivo", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid var(--rule)}
+.mark{font-weight:800;font-stretch:110%;text-decoration:none;letter-spacing:-.01em}
+.mark span{display:inline-block;width:10px;height:10px;background:var(--signal);margin-right:8px;transform:translateY(-1px)}
+.nav{display:flex;gap:22px;font-size:15px}
+.nav a{text-decoration:none;color:var(--muted)}
+.nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;padding:72px 0 88px}
+.hero h1{font-size:clamp(52px,8.4vw,112px);line-height:.9;font-weight:900;font-stretch:125%;letter-spacing:-.03em;margin:0 0 28px}
+.hero h1 .last{display:block;font-stretch:62%;font-weight:500;letter-spacing:-.01em;color:var(--muted)}
+.lede{font-size:21px;line-height:1.45;max-width:30ch;margin:0 0 28px}
+.facts{display:flex;flex-wrap:wrap;gap:10px 26px;font-size:15px;color:var(--muted);margin:0 0 32px;padding:0;list-style:none}
+.facts li::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--signal);margin-right:9px;transform:translateY(-2px)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:12px 20px;font-weight:600;font-size:15px;text-decoration:none;border:1.5px solid var(--ink)}
+.btn.solid{background:var(--ink);color:var(--paper)}
+.btn.solid:hover{background:var(--signal);border-color:var(--signal);color:#fff}
+.btn:not(.solid):hover{background:var(--paper-2)}
+
+/* terminal — the one loud thing */
+.term{background:var(--term-bg);color:var(--term-fg);font-family:var(--mono);font-size:14px;line-height:1.55;border-radius:10px;box-shadow:0 30px 70px -30px rgba(0,0,0,.7),0 0 0 1px #2A3643;overflow:hidden}
+.term-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;background:#151E27;color:var(--term-dim);font-size:12px}
+.term-bar i{width:11px;height:11px;border-radius:50%;background:#2E3A45}
+.term-bar i:first-child{background:var(--signal)}
+.term-bar b{margin-left:auto;font-weight:400}
+.term-body{height:380px;overflow-y:auto;padding:16px 18px 8px}
+.term-body p{margin:0;white-space:pre-wrap;word-break:break-word}
+.term .p{color:var(--term-ok)}
+.term .d{color:var(--term-dim)}
+.term .w{color:var(--term-warn)}
+.term .s{color:var(--signal)}
+.term-in{display:flex;gap:8px;padding:4px 18px 16px}
+.term-in label{color:var(--term-ok)}
+.term-in input{flex:1;background:transparent;border:0;color:var(--term-fg);font:inherit;caret-color:var(--signal);min-width:0}
+.term-in input:focus-visible{outline:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 16px}
+.chips button{font:12px var(--mono);color:var(--term-dim);background:transparent;border:1px solid #2E3A45;border-radius:4px;padding:4px 8px;cursor:pointer}
+.chips button:hover{color:var(--term-fg);border-color:var(--term-dim)}
+
+/* sections */
+section{padding:88px 0;border-top:1px solid var(--rule)}
+.sec-head{display:grid;grid-template-columns:260px 1fr;gap:40px;margin-bottom:48px}
+.sec-head h2{font-size:34px;line-height:1.05;font-weight:800;font-stretch:115%;letter-spacing:-.02em;margin:0}
+.sec-head p{margin:0;color:var(--muted);max-width:58ch}
+
+/* three sides */
+.sides{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--ink)}
+.side{padding:28px 28px 8px 0}
+.side + .side{padding-left:28px;border-left:1px solid var(--rule)}
+.side h3{font-size:26px;font-weight:800;font-stretch:120%;margin:0 0 4px;letter-spacing:-.01em}
+.side .where{font-size:14px;color:var(--muted);margin:0 0 16px}
+.side ul{margin:0;padding:0 0 0 18px}
+.side li{margin-bottom:8px}
+.side li::marker{color:var(--signal)}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0}
+.tl > li{display:grid;grid-template-columns:260px 1fr;gap:40px;padding:30px 0;border-top:1px solid var(--rule)}
+.tl > li:first-child{border-top:2px solid var(--ink)}
+.when{font-family:var(--mono);font-size:14px;color:var(--muted);padding-top:6px}
+.when strong{display:block;font-family:var(--sans);font-size:15px;color:var(--ink);font-weight:600;margin-top:4px}
+.tl h3{font-size:22px;font-weight:700;margin:0 0 10px}
+.tl ul{margin:0;padding-left:18px;max-width:68ch}
+.tl ul li{display:list-item;padding:0;border:0;margin-bottom:6px}
+.tl ul li::marker{color:var(--signal)}
+.metric{display:inline-block;font-weight:700;background:var(--signal);color:#fff;padding:0 6px;border-radius:3px}
+
+/* matrix */
+.matrix-wrap{overflow-x:auto;margin:0 -24px;padding:0 24px 8px}
+.matrix{display:grid;grid-template-columns:repeat(7,minmax(150px,1fr));gap:6px;min-width:1080px}
+.col h3{font-size:14px;font-weight:700;margin:0 0 6px;padding:10px;background:var(--surface-2);color:var(--ink);border-top:2px solid var(--signal);line-height:1.25;min-height:56px}
+.col span{display:block;font-size:13.5px;line-height:1.3;padding:8px 10px;margin-bottom:6px;background:var(--surface);border-left:3px solid transparent}
+.col span.k{border-left-color:var(--signal);font-weight:600}
+.legend{font-size:14px;color:var(--muted);margin-top:16px}
+.legend b{display:inline-block;width:14px;height:14px;background:var(--surface);border-left:3px solid var(--signal);vertical-align:-2px;margin-right:6px}
+
+/* education */
+.edu{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;border-top:2px solid var(--ink);padding-top:28px}
+.edu h3{font-size:20px;margin:0 0 4px}
+.edu p{margin:0 0 8px;color:var(--muted);font-size:15.5px}
+.edu p.note{color:var(--ink)}
+
+/* contact */
+.contact{background:var(--paper-2)}
+.big-mail{display:inline-block;font-size:clamp(19px,1.9vw,26px);font-weight:800;letter-spacing:-.02em;text-decoration:none;border-bottom:4px solid var(--signal);word-break:break-all;line-height:1.15}
+.big-mail:hover{color:var(--signal)}
+.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.links .btn:hover{background:var(--surface-2)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form .full{grid-column:1/-1}
+.form label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.form label small{font-weight:400;color:var(--muted)}
+.form input,.form select,.form textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:4px;padding:11px 12px}
+.form textarea{min-height:140px;resize:vertical}
+.form input:hover,.form select:hover,.form textarea:hover{border-color:var(--muted)}
+.form .hp{position:absolute;left:-9999px}
+.form button{justify-self:start;cursor:pointer;font-family:inherit}
+.form button[disabled]{opacity:.6;cursor:wait}
+.status{font-size:15px;margin:0;align-self:center}
+.status.ok{color:var(--term-ok)}
+.status.err{color:var(--term-warn)}
+.alt{color:var(--muted);font-size:15px;margin:22px 0 0}
+footer{background:var(--paper-2);color:var(--muted);font-size:14px;padding:0 0 40px}
+footer .wrap{border-top:1px solid var(--rule);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;padding:48px 0 64px}
+  .sec-head,.tl > li{grid-template-columns:1fr;gap:12px}
+  .sides,.edu,.contact-grid{grid-template-columns:1fr}
+  .form{grid-template-columns:1fr}
+  .side,.side + .side{padding:24px 0 8px;border-left:0}
+  .side + .side{border-top:1px solid var(--rule)}
+  .nav{display:none}
+  section{padding:64px 0}
+}
+@media (max-width:480px){
+  .wrap{padding:0 16px}
+  .matrix-wrap{margin:0 -16px;padding:0 16px 8px}
+  .term-body{height:320px}
+  body{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <a class="mark" href="#"><span></span>Shiyam Sundar S</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#sides">What I do</a>
+      <a href="#work">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1>Shiyam<span class="last">Sundar S</span></h1>
+      <p class="lede">I've spent years breaking into systems and watching over them. Now I write detections with an attacker's instincts.</p>
+      <ul class="facts">
+        <li>Security Operations Analyst</li>
+        <li>3 years at Zoho &amp; FinnUp</li>
+        <li>M.Tech, Cybersecurity</li>
+        <li>Chennai, India</li>
+      </ul>
+      <div class="ctas">
+        <a class="btn solid" href="#contact">Get in touch</a>
+        <a class="btn" href="resume.pdf" download>Download résumé</a>
+      </div>
+    </div>
+
+    <div class="term" aria-label="Interactive terminal. Type help to see commands.">
+      <div class="term-bar"><i></i><i></i><i></i><b>shiyam@soc: ~</b></div>
+      <div class="term-body" id="out" aria-live="polite"></div>
+      <form class="term-in" id="form" autocomplete="off">
+        <label for="cmd">$</label>
+        <input id="cmd" type="text" spellcheck="false" autocapitalize="off" aria-label="Terminal command">
+      </form>
+      <div class="chips" aria-label="Quick commands">
+        <button type="button" data-c="whoami">whoami</button>
+        <button type="button" data-c="nmap shiyam">nmap shiyam</button>
+        <button type="button" data-c="skills">skills</button>
+        <button type="button" data-c="experience">experience</button>
+        <button type="button" data-c="contact">contact</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="sides">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Three sides of the same problem</h2>
+      <p>Most security people stay on one side of the fence. I've worked on all three: attacking systems, defending them in a 24x7 SOC, and building the products that need protecting.</p>
+    </div>
+    <div class="sides">
+      <div class="side">
+        <h3>Break</h3>
+        <p class="where">Offensive security at Zoho and FinnUp</p>
+        <ul>
+          <li>Network, web, wireless and API penetration tests</li>
+          <li>Exploited critical CVEs and simulated malware infection paths</li>
+          <li>Python exploit automation and a Burp Suite to Jira triage pipeline</li>
+        </ul>
+      </div>
+      <div class="side">
+        <h3>Watch</h3>
+        <p class="where">Security operations at Zoho</p>
+        <ul>
+          <li>MITRE ATT&amp;CK-aligned SIEM detections</li>
+          <li>SOAR playbooks that cut response time</li>
+          <li>Alert triage, root cause analysis and email security</li>
+        </ul>
+      </div>
+      <div class="side">
+        <h3>Build</h3>
+        <p class="where">Product management at Zoho and FinnUp</p>
+        <ul>
+          <li>Owned the roadmap for FinTech SaaS offerings</li>
+          <li>Risk assessments for authentication flows and API access</li>
+          <li>Security controls built into Agile sprints, not bolted on later</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Experience</h2>
+      <p>From penetration testing to the SOC floor to product, and now teaching the next batch of defenders.</p>
+    </div>
+    <ol class="tl" reversed>
+      <li>
+        <div class="when">Aug 2026 – present<strong>St. Joseph's College of Engineering</strong></div>
+        <div>
+          <h3>Assistant Professor, Cyber Security</h3>
+          <ul>
+            <li>Teach cybersecurity to undergraduate CSE students and run hands-on CTF workshops.</li>
+            <li>Secured the college website and mentored student hackathon teams, with three teams selected.</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="when">2025<strong>FinnUp Solutions</strong></div>
+        <div>
+          <h3>Cybersecurity Analyst &amp; Product Manager</h3>
+          <ul>
+            <li>Ran external and internal penetration tests across FinTech SaaS APIs, with custom Python scripts for exploit automation.</li>
+            <li>Built automated vulnerability triage by integrating Burp Suite and Jira over REST APIs.</li>
+            <li>Owned the end-to-end product roadmap, turning customer feedback and technical findings into prioritized features.</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="when">2024<strong>Zoho Corporation</strong></div>
+        <div>
+          <h3>Associate Product Manager</h3>
+          <ul>
+            <li>Worked with security engineers and developers to build security controls into feature sprints and Agile pipelines.</li>
+            <li>Ran risk assessments for new features, covering secure authentication flows and API access controls.</li>
+            <li>Shipped user-facing improvements that raised adoption and closed off potential abuse vectors.</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="when">2023 – 2024<strong>Zoho Corporation</strong></div>
+        <div>
+          <h3>Security Operations Analyst</h3>
+          <ul>
+            <li>Designed MITRE ATT&amp;CK-aligned SIEM detection rules, improving detection accuracy by <span class="metric">25%</span>.</li>
+            <li>Built SOAR workflows and playbooks that improved MTTD and MTTR by <span class="metric">30%</span>.</li>
+            <li>Triaged and investigated alerts in a 24x7 rotating-shift SOC, with root cause analysis of each threat's source and impact.</li>
+            <li>Tuned rules to cut false positives; maintained playbooks, runbooks, tickets and shift handoffs.</li>
+            <li>Strengthened email security through SPF, DKIM and DMARC validation, phishing simulations and awareness training.</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="when">2022 – 2023<strong>Zoho Corporation</strong></div>
+        <div>
+          <h3>Cyber Security Analyst</h3>
+          <ul>
+            <li>Conducted network, web and wireless penetration tests using Metasploit, Nmap, Wireshark and Burp Suite.</li>
+            <li>Exploited discovered vulnerabilities to measure how well existing controls held up.</li>
+            <li>Wrote vulnerability and threat reports with remediation guidance for high-risk findings.</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Skills matrix</h2>
+      <p>Laid out the way an ATT&amp;CK matrix is: each column is a domain, each cell a technique or tool I've used in real work.</p>
+    </div>
+    <div class="matrix-wrap">
+      <div class="matrix">
+        <div class="col"><h3>SIEM &amp; detection</h3>
+          <span class="k">Wazuh rule writing</span><span class="k">Splunk SPL</span><span>Elastic / Kibana KQL</span><span class="k">MITRE ATT&amp;CK</span><span>Detection tuning</span><span>YARA</span><span>Suricata</span><span>Sysmon</span><span>Windows &amp; Linux logs</span><span>EDR, firewall, IDS/IPS</span>
+        </div>
+        <div class="col"><h3>SOAR &amp; automation</h3>
+          <span class="k">Splunk SOAR (Phantom)</span><span>n8n</span><span class="k">Python</span><span>PowerShell</span><span>SQL</span><span>REST APIs</span><span>JSON, XML/SOAP</span><span>Regex</span><span>Git</span><span>Playbook development</span>
+        </div>
+        <div class="col"><h3>Incident response</h3>
+          <span class="k">Alert triage</span><span class="k">Investigation &amp; RCA</span><span>Threat intelligence</span><span>Phishing analysis</span><span>SPF, DKIM, DMARC</span><span>DNS monitoring</span><span>Playbooks &amp; runbooks</span><span>MTTD / MTTR</span>
+        </div>
+        <div class="col"><h3>Offensive security</h3>
+          <span class="k">Penetration testing</span><span>Vulnerability assessment</span><span class="k">Burp Suite</span><span>Nessus</span><span>OpenVAS</span><span>Metasploit</span><span>Nmap</span><span>Wireshark</span><span>Malware analysis</span><span>API security &amp; WAF</span>
+        </div>
+        <div class="col"><h3>Governance &amp; risk</h3>
+          <span>ISO 27001</span><span>NIST</span><span>SSDLC</span><span>Secure coding</span><span class="k">Threat modeling</span><span>Risk assessment</span><span>Code reviews</span>
+        </div>
+        <div class="col"><h3>Product &amp; delivery</h3>
+          <span class="k">Roadmapping</span><span>PRDs</span><span>User personas</span><span>Agile</span><span>Jira &amp; Confluence</span><span>Figma</span><span>Stakeholder management</span>
+        </div>
+        <div class="col"><h3>AI &amp; cloud</h3>
+          <span>OpenAI APIs</span><span>LLMs</span><span>Ollama</span><span>PyTorch</span><span>Azure fundamentals</span><span>AWS cloud security</span>
+        </div>
+      </div>
+    </div>
+    <p class="legend"><b></b>Highlighted cells are where I've done the most hands-on work.</p>
+  </div>
+</section>
+
+<section id="edu">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Education &amp; certifications</h2>
+      <p>Formal training in systems security, with a thesis on smart contract attacks.</p>
+    </div>
+    <div class="edu">
+      <div>
+        <h3>M.Tech, Cybersecurity Systems and Networks</h3>
+        <p>Amrita Vishwa Vidyapeetham, Amritapuri · 2021 – 2023</p>
+        <p class="note">Thesis: a function-locking mechanism to prevent smart contract reentrancy attacks. Coursework in reverse engineering, malware analysis and PE structures.</p>
+      </div>
+      <div>
+        <h3>B.E, Computer Science</h3>
+        <p>Prince Dr. K. Vasudevan College of Engineering &amp; Technology, Chennai · 2017 – 2021</p>
+      </div>
+      <div>
+        <h3>Certifications</h3>
+        <p class="note">Microsoft Azure Fundamentals</p>
+        <p class="note">AWS Cloud Security</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Let's talk</h2>
+      <p>Open to security operations, detection engineering and security product roles. Send a message here, or reach me directly.</p>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <a class="big-mail" href="mailto:shiyamsundarsuresh@hotmail.com">shiyamsundarsuresh@hotmail.com</a>
+        <div class="links">
+          <a class="btn" href="https://www.linkedin.com/in/shiyamsundarsuresh" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="resume.pdf" download>Download résumé</a>
+        </div>
+      </div>
+      <form class="form" id="contact-form" novalidate>
+        <div><label for="f-name">Name</label><input id="f-name" name="name" required autocomplete="name"></div>
+        <div><label for="f-email">Email</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+        <div><label for="f-org">Company <small>(optional)</small></label><input id="f-org" name="company" autocomplete="organization"></div>
+        <div><label for="f-reason">Reason</label>
+          <select id="f-reason" name="reason">
+            <option>Job opportunity</option><option>Freelance or consulting</option><option>Speaking or workshop</option><option>Collaboration</option><option>Something else</option>
+          </select></div>
+        <div class="full"><label for="f-msg">Message</label><textarea id="f-msg" name="message" required></textarea></div>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="btn solid" type="submit">Send message</button>
+        <p class="status" id="f-status" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+<footer><div class="wrap"><span>© 2026 Shiyam Sundar S</span><span>Built as a single HTML file. Try <code>sudo hire shiyam</code> in the terminal.</span></div></footer>
+
+<script>
+(function(){
+  const out = document.getElementById('out');
+  const form = document.getElementById('form');
+  const input = document.getElementById('cmd');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hist = []; let hi = 0;
+
+  const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  function line(html){ const p = document.createElement('p'); p.innerHTML = html; out.appendChild(p); out.scrollTop = out.scrollHeight; }
+  function lines(arr){ arr.forEach(line); }
+  function echo(cmd){ line('<span class="p">$</span> ' + esc(cmd)); }
+
+  const C = {
+    help: () => lines([
+      '<span class="d">Available commands:</span>',
+      '  <span class="s">whoami</span>       who is this',
+      '  <span class="s">nmap shiyam</span>  scan me for open services',
+      '  <span class="s">skills</span>       core tooling',
+      '  <span class="s">experience</span>   where I\'ve worked',
+      '  <span class="s">contact</span>      how to reach me',
+      '  <span class="s">linkedin</span>     open my LinkedIn',
+      '  <span class="s">resume</span>       download my résumé',
+      '  <span class="s">clear</span>        clear the screen'
+    ]),
+    whoami: () => lines([
+      'Shiyam Sundar S',
+      'Security Operations Analyst · Chennai, India',
+      '<span class="d">3 yrs across SOC, detection engineering, SOAR,</span>',
+      '<span class="d">incident response and penetration testing.</span>',
+      '<span class="d">Currently teaching cybersecurity at St. Joseph\'s.</span>'
+    ]),
+    'nmap shiyam': () => lines([
+      '<span class="d">Starting Nmap scan against shiyam (127.0.0.1)</span>',
+      'PORT      STATE  SERVICE',
+      '22/tcp    <span class="p">open</span>   detection-engineering   <span class="d">(Wazuh, Splunk, KQL)</span>',
+      '80/tcp    <span class="p">open</span>   soar-automation         <span class="d">(Phantom, n8n, Python)</span>',
+      '443/tcp   <span class="p">open</span>   incident-response       <span class="d">(triage, RCA, phishing)</span>',
+      '8080/tcp  <span class="p">open</span>   offensive-security      <span class="d">(Burp, Metasploit)</span>',
+      '9200/tcp  <span class="p">open</span>   product-thinking        <span class="d">(roadmaps, PRDs)</span>',
+      '3389/tcp  <span class="w">filtered</span> burnout              <span class="d">(blocked by policy)</span>',
+      '<span class="d">Nmap done: 1 host up, 5 services worth hiring.</span>'
+    ]),
+    skills: () => lines([
+      '<span class="s">siem</span>     Wazuh · Splunk SPL · Elastic KQL · Sysmon · YARA · Suricata',
+      '<span class="s">soar</span>     Splunk SOAR · n8n · Python · PowerShell · REST APIs',
+      '<span class="s">ir</span>       triage · RCA · threat intel · SPF/DKIM/DMARC',
+      '<span class="s">offsec</span>   Burp · Metasploit · Nmap · Nessus · Wireshark',
+      '<span class="s">grc</span>      ISO 27001 · NIST · threat modeling',
+      '<span class="d">Full matrix further down the page.</span>'
+    ]),
+    experience: () => lines([
+      '2026–now   Asst. Professor, Cyber Security   St. Joseph\'s',
+      '2025       Cybersec Analyst &amp; PM          FinnUp',
+      '2024       Associate Product Manager         Zoho',
+      '2023–24    Security Operations Analyst       Zoho',
+      '2022–23    Cyber Security Analyst            Zoho',
+      '<span class="d">Detections +25% accuracy · MTTD/MTTR improved 30%</span>'
+    ]),
+    contact: () => lines([
+      'email     <a href="mailto:shiyamsundarsuresh@hotmail.com">shiyamsundarsuresh@hotmail.com</a>',
+      'linkedin  <a href="https://www.linkedin.com/in/shiyamsundarsuresh" target="_blank" rel="noopener">in/shiyamsundarsuresh</a>',
+      '<span class="d">or use the form at the bottom of the page.</span>'
+    ]),
+    resume: () => { line('<span class="d">Fetching resume.pdf…</span>'); const a = document.createElement('a'); a.href='resume.pdf'; a.download=''; a.click(); },
+    clear: () => { out.innerHTML = ''; },
+    'sudo hire shiyam': () => lines([
+      '<span class="d">[sudo] password for recruiter: ********</span>',
+      '<span class="p">Access granted.</span> Privilege escalation was the easy part.',
+      'Next step: <a href="mailto:shiyamsundarsuresh@hotmail.com">send an email</a>.'
+    ]),
+    ls: () => line('about.txt  resume.pdf  detections/  playbooks/  ctf-writeups/'),
+    'cat about.txt': () => C.whoami(),
+    linkedin: () => { line('<span class="d">Opening LinkedIn…</span>'); window.open('https://www.linkedin.com/in/shiyamsundarsuresh','_blank','noopener'); },
+  };
+  C.sudo = () => line('<span class="w">usage:</span> sudo hire shiyam');
+  C.nmap = () => line('<span class="w">usage:</span> nmap shiyam');
+
+  function run(raw){
+    const cmd = raw.trim().replace(/\s+/g,' ');
+    echo(raw);
+    if (!cmd) return;
+    hist.push(raw); hi = hist.length;
+    const fn = C[cmd.toLowerCase()];
+    if (fn) fn();
+    else if (cmd.toLowerCase().startsWith('rm ')) line('<span class="w">Denied.</span> This host is monitored.');
+    else line('<span class="w">command not found:</span> ' + esc(cmd) + ' <span class="d">— try</span> <span class="s">help</span>');
+  }
+
+  form.addEventListener('submit', e => { e.preventDefault(); run(input.value); input.value=''; });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowUp' && hi > 0){ hi--; input.value = hist[hi]; e.preventDefault(); }
+    if (e.key === 'ArrowDown'){ hi = Math.min(hist.length, hi+1); input.value = hist[hi] || ''; e.preventDefault(); }
+  });
+  document.querySelectorAll('.chips button').forEach(b => b.addEventListener('click', () => { run(b.dataset.c); input.focus({preventScroll:true}); }));
+  document.querySelector('.term-body').addEventListener('click', () => input.focus({preventScroll:true}));
+
+  // one orchestrated moment: type "whoami" on load
+  lines(['<span class="d">Last login: from a recruiter\'s browser</span>', '<span class="d">Type</span> <span class="s">help</span> <span class="d">or tap a command below.</span>', '']);
+  if (reduce){ run('whoami'); return; }
+  const demo = 'whoami'; let i = 0;
+  setTimeout(function type(){
+    if (i <= demo.length){ input.value = demo.slice(0, i++); setTimeout(type, 110); }
+    else { setTimeout(() => { run(demo); input.value=''; }, 250); }
+  }, 700);
+})();
+</script>
+<script>
+/* Contact form → Google Sheet.
+   Paste your Apps Script web app URL below (see README). Until then, the form falls back to opening an email. */
+const SHEET_URL = '';
+(function(){
+  const f = document.getElementById('contact-form'), st = document.getElementById('f-status'), btn = f.querySelector('button');
+  const say = (t, c) => { st.textContent = t; st.className = 'status ' + (c || ''); };
+  f.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (f.website.value) return; // bot
+    const name = f.name.value.trim(), email = f.email.value.trim(), msg = f.message.value.trim();
+    if (!name || !msg || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { say('Add your name, a valid email and a message.', 'err'); return; }
+    if (!SHEET_URL) {
+      const body = encodeURIComponent(`${msg}\n\n— ${name} (${email})${f.company.value ? ', ' + f.company.value : ''}`);
+      location.href = `mailto:shiyamsundarsuresh@hotmail.com?subject=${encodeURIComponent(f.reason.value + ' — from portfolio')}&body=${body}`;
+      return;
+    }
+    btn.disabled = true; say('Sending…');
+    try {
+      await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: new FormData(f) });
+      f.reset(); say('Message sent. I\'ll reply within a couple of days.', 'ok');
+    } catch (_) {
+      say('Couldn\'t send. Check your connection or email me directly.', 'err');
+    } finally { btn.disabled = false; }
+  });
+})();
+</script>
+</body>
+</html>
